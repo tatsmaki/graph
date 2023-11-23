@@ -1,0 +1,31 @@
+.actions {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.actions > button,
+.actions > label {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 8px;
+  height: 36px;
+  padding: 0 16px;
+  cursor: pointer;
+  border: none;
+  background: #fefefe;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+  font-family: Arial;
+  font-size: 13.3333px;
+  user-select: none;
+}
+
+.actions > button:hover,
+.actions > label:hover {
+  background: #f4f4f4;
+}

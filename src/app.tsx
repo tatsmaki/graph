@@ -1,3 +1,10 @@
+import { ReactFlowProvider } from 'reactflow'
+import { Flow } from './components/flow'
+
 export const App = () => {
-  return <div>123</div>;
-};
+  return (
+    <ReactFlowProvider>
+      <Flow />
+    </ReactFlowProvider>
+  )
+}

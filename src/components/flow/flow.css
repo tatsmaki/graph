@@ -1,0 +1,31 @@
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+}
+
+#root {
+  height: 100%;
+}
+
+.flow {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.react-flow__attribution {
+  display: none;
+}
+
+.react-flow__node {
+  height: 50px;
+  width: 50px;
+}
+
+.react-flow__handle {
+  opacity: 0.1;
+}
