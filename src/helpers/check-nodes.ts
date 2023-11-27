@@ -1,4 +1,4 @@
-import { getOutgoers, getConnectedEdges, Node, Edge } from 'reactflow'
+import { getOutgoers, Node, Edge } from 'reactflow'
 import { flowService } from '../services/flow.service'
 import { useHighlightStore } from '../services/highlight.service'
 import { wait } from './wait'
@@ -27,13 +27,13 @@ export const checkNodes = async () => {
   const edges = flowService.flow.getEdges()
   const nodes = flowService.flow.getNodes()
   const loops: string[][] = []
-  const path = new Set<string>()
+  // const path = new Set<string>()
 
   //   const outgoers = getOutgoers(nodes[0], nodes, edges)
   //   const connectedEdges = getConnectedEdges([nodes[0]], edges)
   //   console.log(nodes[0], outgoers, connectedEdges)
 
-  const highlightService = useHighlightStore.getState()
+  // const highlightService = useHighlightStore.getState()
 
   await findNextNode(nodes[0], nodes, edges)
 
