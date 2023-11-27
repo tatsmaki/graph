@@ -8,6 +8,7 @@ interface IHighlightStore {
   setHighlight(edgeId: string, nodeIds: string[]): void
   setGrayId(nodeId: string): void
   setBlackId(nodeId: string): void
+  resetHighlight(): void
 }
 
 export const useHighlightStore = create<IHighlightStore>((set) => ({
@@ -23,5 +24,8 @@ export const useHighlightStore = create<IHighlightStore>((set) => ({
   },
   setBlackId(nodeId) {
     set((state) => ({ blackIds: [...state.blackIds, nodeId] }))
+  },
+  resetHighlight() {
+    set({ grayIds: [], blackIds: [] })
   },
 }))

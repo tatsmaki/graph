@@ -3,6 +3,7 @@ import { flowService } from '../../../services/flow.service'
 import './import.css'
 import { readJson } from '../../../helpers/read-json'
 import { ReactFlowJsonObject } from 'reactflow'
+import { useHighlightStore } from '../../../services/highlight.service'
 
 export const Import = () => {
   const handleImport: ChangeEventHandler<HTMLInputElement> = (event) => {
@@ -11,6 +12,8 @@ export const Import = () => {
     flowService.flow.setEdges([])
 
     if (files) {
+      useHighlightStore.getState().resetHighlight()
+
       readJson<ReactFlowJsonObject>(files[0]).then((json) => {
         flowService.flow.setViewport(json.viewport)
         flowService.flow.setNodes(json.nodes)
