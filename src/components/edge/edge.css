@@ -1,0 +1,7 @@
+.react-flow__edge-path {
+  transition: stroke 0.3s;
+}
+
+.--search {
+  stroke: black;
+}

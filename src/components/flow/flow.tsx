@@ -24,6 +24,7 @@ import { Actions } from '../actions'
 import { Export } from '../actions/export'
 import { Import } from '../actions/import'
 import { EdgeDirection } from '../actions/edge-direction'
+import { DefineClass } from '../actions/define-class'
 
 const nodeTypes = {
   default: NodeComponent,
@@ -62,6 +63,7 @@ export const Flow = () => {
         <EdgeDirection />
         <Export />
         <Import />
+        <DefineClass />
       </Actions>
       <ReactFlow
         nodes={nodes}

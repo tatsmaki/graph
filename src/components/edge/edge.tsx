@@ -1,8 +1,11 @@
 import { EdgeProps, EdgeLabelRenderer, getStraightPath } from 'reactflow'
 import { flowService } from '../../services/flow.service'
 import { getEdgeParams } from '../../helpers/get-edge-params'
+import { useHighlightStore } from '../../services/highlight.service'
+import './edge.css'
 
 export const Edge = ({ id, source, target, markerEnd, style, label }: EdgeProps) => {
+  const { edgeId } = useHighlightStore()
   const sourceNode = flowService.flow.getNode(source)
   const targetNode = flowService.flow.getNode(target)
 
@@ -22,7 +25,7 @@ export const Edge = ({ id, source, target, markerEnd, style, label }: EdgeProps)
     <>
       <path
         id={id}
-        className="react-flow__edge-path"
+        className={`react-flow__edge-path ${edgeId === id && '--search'}`}
         d={edgePath}
         markerEnd={markerEnd}
         style={style}

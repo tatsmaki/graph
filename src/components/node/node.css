@@ -4,4 +4,27 @@
   align-items: center;
   justify-content: center;
   pointer-events: none;
+  transition: background 0.3s;
+}
+
+/* .--search {
+  background-color: #6dc5ff90;
+} */
+
+.--gray {
+  background-color: #6d6d6d2d;
+}
+
+.--black {
+  background-color: #17171790;
+}
+
+.react-flow__node {
+  height: 50px;
+  width: 50px;
+  padding: 0;
+}
+
+.react-flow__handle {
+  opacity: 0.1;
 }

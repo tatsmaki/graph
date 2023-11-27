@@ -4,6 +4,8 @@ import { flowService } from '../services/flow.service'
 let id = 0
 
 const getId = () => {
+  const { length } = flowService.flow.getNodes()
+  id = length
   id += 1
   return String(id)
 }
