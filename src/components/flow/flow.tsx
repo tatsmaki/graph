@@ -25,6 +25,7 @@ import { Export } from '../actions/export'
 import { Import } from '../actions/import'
 import { EdgeDirection } from '../actions/edge-direction'
 import { DefineClass } from '../actions/define-class'
+import { Matrix } from '../matrix'
 
 const nodeTypes = {
   default: NodeComponent,
@@ -80,6 +81,7 @@ export const Flow = () => {
         <Background variant={BackgroundVariant.Lines} />
         <Controls position="top-right" />
       </ReactFlow>
+      <Matrix nodes={nodes} edges={edges} />
     </div>
   )
 }

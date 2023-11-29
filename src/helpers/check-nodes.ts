@@ -2,76 +2,85 @@ import { getOutgoers, Node, Edge } from 'reactflow'
 import { flowService } from '../services/flow.service'
 import { useHighlightStore } from '../services/highlight.service'
 import { wait } from './wait'
+import { usePathStore } from '../services/path.service'
+
+let routeIntersections = 0
 
 const findNextNode = async (node: Node, nodes: Node[], edges: Edge[]) => {
-  const highlightService = useHighlightStore.getState()
+  const highlightStore = useHighlightStore.getState()
+  const pathStore = usePathStore.getState()
+  pathStore.addNode(node.id)
+  highlightStore.setBlueId(node.id)
 
-  if (highlightService.grayIds.includes(node.id)) {
-    console.warn('Петля')
+  /**
+   * Loop detection
+   */
+  if (highlightStore.grayIds.includes(node.id)) {
+    console.warn(node.id, pathStore.path)
+    pathStore.addLoop()
+    pathStore.resetPath()
+    if (highlightStore.blueIds.length > nodes.length) {
+      return
+    }
+    highlightStore.resetGrayAndBlack()
+    routeIntersections += 1
+    return
   }
+  highlightStore.setGrayId(node.id)
+  await wait()
+
   const outgoers = getOutgoers(node, nodes, edges)
   if (outgoers.length) {
-    highlightService.setBlackId(node.id)
+    highlightStore.setBlackId(node.id)
     await wait()
   }
 
+  /**
+   * Handle chain end
+   */
+  if (!outgoers.length) {
+    highlightStore.resetGrayAndBlack()
+    pathStore.resetPath()
+    return
+  }
+
+  /**
+   * Handle branches
+   */
   for (let i = 0; i < outgoers.length; i += 1) {
     const outgoer = outgoers[i]
-    highlightService.setGrayId(outgoer.id)
+
     await wait()
     await findNextNode(outgoer, nodes, edges)
   }
 }
 
+const findFirstNode = (nodes: Node[]) => {
+  const highlightStore = useHighlightStore.getState()
+
+  return nodes.find((node) => !highlightStore.blueIds.includes(node.id)) || nodes[0]
+}
+
 export const checkNodes = async () => {
+  routeIntersections = 0
   const edges = flowService.flow.getEdges()
   const nodes = flowService.flow.getNodes()
-  const loops: string[][] = []
-  // const path = new Set<string>()
+  usePathStore.getState().resetLoops()
 
-  //   const outgoers = getOutgoers(nodes[0], nodes, edges)
-  //   const connectedEdges = getConnectedEdges([nodes[0]], edges)
-  //   console.log(nodes[0], outgoers, connectedEdges)
+  let groups = 0
+  while (nodes.length > useHighlightStore.getState().blueIds.length) {
+    groups += 1
+    await findNextNode(findFirstNode(nodes), nodes, edges)
+  }
 
-  // const highlightService = useHighlightStore.getState()
-
-  await findNextNode(nodes[0], nodes, edges)
-
-  //   for (let i = 0; i < nodes.length; i += 1) {
-  //     const node = nodes[i]
-
-  //     highlightService.setBlackId(node.id)
-  //     const outgoers = getOutgoers(node, nodes, edges)
-  //     const connectedEdges = getConnectedEdges([node], edges).filter(
-  //       (edge) => edge.source === node.id
-  //     )
-
-  //     for (let j = 0; j < connectedEdges.length; j += 1) {
-  //       //   const edge = connectedEdges[j]
-  //       //   useHighlightStore.getState().setHighlight(edge.id, [edge.source, edge.target])
-  //       //   await wait(() => {
-  //       //     useHighlightStore.getState().setHighlight('', [])
-  //       //   })
-  //     }
-  //   }
-
-  //   for (let i = 0; i < edges.length; i += 1) {
-  //     const edge = edges[i]
-  //     path.add(edge.source)
-  //     if (path.has(edge.target)) {
-  //       loops.push([...path])
-  //       path.clear()
-  //     }
-
-  //     useHighlightStore.getState().setHighlight(edge.id, [edge.source, edge.target])
-
-  //     await wait(() => {
-  //       useHighlightStore.getState().setHighlight('', [])
-  //     })
-  //   }
+  const { loops } = usePathStore.getState()
 
   return {
     nodes: nodes.length,
-    loops,
+    loops: loops.length,
+    isCyclical: !!loops.length,
+    groups,
+    isCoherent: groups === 1,
+    routeIntersections,
   }
 }

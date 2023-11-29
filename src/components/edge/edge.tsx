@@ -5,7 +5,7 @@ import { useHighlightStore } from '../../services/highlight.service'
 import './edge.css'
 
 export const Edge = ({ id, source, target, markerEnd, style, label }: EdgeProps) => {
-  const { edgeId } = useHighlightStore()
+  const { grayIds } = useHighlightStore()
   const sourceNode = flowService.flow.getNode(source)
   const targetNode = flowService.flow.getNode(target)
 
@@ -25,7 +25,7 @@ export const Edge = ({ id, source, target, markerEnd, style, label }: EdgeProps)
     <>
       <path
         id={id}
-        className={`react-flow__edge-path ${edgeId === id && '--search'}`}
+        className={`react-flow__edge-path ${grayIds.includes(target) && '--gray'}`}
         d={edgePath}
         markerEnd={markerEnd}
         style={style}
@@ -42,7 +42,7 @@ export const Edge = ({ id, source, target, markerEnd, style, label }: EdgeProps)
           }}
           className="nodrag nopan"
         >
-          {String(label).replace('-', markerEnd ? '→' : '-')}
+          {String(label).replace('-', markerEnd !== 'url(#)' ? '→' : '—')}
         </div>
       </EdgeLabelRenderer>
     </>

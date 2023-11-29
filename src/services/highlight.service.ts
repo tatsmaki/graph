@@ -1,23 +1,22 @@
 import { create } from 'zustand'
 
 interface IHighlightStore {
-  edgeId: string
-  nodeIds: string[]
+  blueIds: string[]
   grayIds: string[]
   blackIds: string[]
-  setHighlight(edgeId: string, nodeIds: string[]): void
+  setBlueId(nodeId: string): void
   setGrayId(nodeId: string): void
   setBlackId(nodeId: string): void
-  resetHighlight(): void
+  resetGrayAndBlack(): void
+  resetAll(): void
 }
 
 export const useHighlightStore = create<IHighlightStore>((set) => ({
-  edgeId: '',
-  nodeIds: [],
+  blueIds: [],
   grayIds: [],
   blackIds: [],
-  setHighlight(edgeId, nodeIds) {
-    set({ edgeId, nodeIds })
+  setBlueId(nodeId) {
+    set((state) => ({ blueIds: [...state.blueIds, nodeId] }))
   },
   setGrayId(nodeId) {
     set((state) => ({ grayIds: [...state.grayIds, nodeId] }))
@@ -25,7 +24,10 @@ export const useHighlightStore = create<IHighlightStore>((set) => ({
   setBlackId(nodeId) {
     set((state) => ({ blackIds: [...state.blackIds, nodeId] }))
   },
-  resetHighlight() {
+  resetGrayAndBlack() {
     set({ grayIds: [], blackIds: [] })
+  },
+  resetAll() {
+    set({ blueIds: [], grayIds: [], blackIds: [] })
   },
 }))

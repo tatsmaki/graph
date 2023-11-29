@@ -12,7 +12,7 @@ export const Import = () => {
     flowService.flow.setEdges([])
 
     if (files) {
-      useHighlightStore.getState().resetHighlight()
+      useHighlightStore.getState().resetAll()
 
       readJson<ReactFlowJsonObject>(files[0]).then((json) => {
         flowService.flow.setViewport(json.viewport)

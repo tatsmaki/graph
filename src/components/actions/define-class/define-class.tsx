@@ -1,25 +1,51 @@
 import { checkEdges } from '../../../helpers/check-edges'
 import { checkNodes } from '../../../helpers/check-nodes'
+import { useHighlightStore } from '../../../services/highlight.service'
 
 export const DefineClass = () => {
   const handleDefine = async () => {
-    const { edges, isDirectional } = checkEdges()
-    const { nodes, loops } = await checkNodes()
-    console.log(nodes, edges, isDirectional, loops)
+    useHighlightStore.getState().resetAll()
+    const { edges, isDirectional, isNotDirectional } = checkEdges()
+    const { nodes, loops, isCyclical, groups, isCoherent } = await checkNodes()
+
+    let description: string[] = []
+
+    if (isCoherent) {
+      description.push('Связный')
+    }
 
     if (isDirectional) {
-      console.warn('Ориентированный')
+      description.push('Ориентированный')
 
-      if (nodes === edges + 1) {
-        console.warn('Ациклический, Дерево')
+      if (isCyclical) {
+        description.push('Циклический')
       }
-    } else {
-      console.warn('Неориентированный')
 
-      if (nodes === edges) {
-        console.warn('Циклический')
+      if (nodes === edges + 1 && isCoherent) {
+        description.push('Дерево')
       }
     }
+
+    if (isNotDirectional) {
+      description.push('Неориентированный')
+
+      if (nodes === edges) {
+        description.push('Полный')
+      }
+    }
+
+    alert(`
+      Характеристики
+
+      Узлов: ${nodes}
+      Рёбер: ${edges}
+      Циклов: ${loops}
+      Подграфов: ${groups}
+
+      Классификация
+
+      ${description.join(', ')}
+    `)
   }
 
   return <button onClick={handleDefine}>Define Class</button>
